@@ -15,7 +15,7 @@ class Home extends React.Component {
             <div>
                 <center>
                     <h1>
-                        Welcome to [Site Name]!
+                        Welcome to the Breeding Application!
                     </h1>
                     
                 </center>
