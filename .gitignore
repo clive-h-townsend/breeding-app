@@ -1,4 +1,4 @@
 
 node_modules
 build
-src/Data/Fire.js
+./src/Data/Fire.js
