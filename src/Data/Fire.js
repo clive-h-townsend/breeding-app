@@ -1,5 +1,5 @@
 import firebase from 'firebase'
-
+import siteAPIKey from './Sensative/apiKey'
 
 // These are straight from firebase. They are backed up
 // Don't post 2
@@ -9,7 +9,7 @@ let config = {
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
         firebase.auth.EmailAuthProvider.PROVIDER_ID,
       ],
-      apiKey: "",
+      apiKey: siteAPIKey,
       authDomain: "breeding-app.firebaseapp.com",
       databaseURL: "https://breeding-app.firebaseio.com",
       projectId: "breeding-app",
