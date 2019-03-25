@@ -7,6 +7,7 @@ import {GoogleAnalytics} from '../Data/GA'
 import * as SButton from '../Components/StyledComponents/Buttons'
 import * as SInput from '../Components/StyledComponents/Inputs'
 
+
 class Manager extends React.Component {
 
     state = { 
@@ -66,13 +67,27 @@ class Manager extends React.Component {
         
    
         
-        animalList.forEach(animal=> {
+        animalList.forEach(animal => {
+
+            
+            
+            animal = animal.substring(animal.indexOf('(') + 1)
+            
+            if (animal.indexOf(')') > -1) {
+                animal = animal.substring(0, animal.length - 1)
+            }
+            
             let animalObject = {
-                animalRegNumbers: animal,
+                animalRegNumber: animal,
                 owner: auth.currentUser.uid,
                 herd: this.state.selectedHerd,
             }
-            db.collection('animals').add(animalObject)
+            if (animal.length > 1) {
+                db.collection('animals').doc(animal).set(animalObject, {merge: true})
+            }
+            
+            
+
         }) 
 
         this.setState({animalRegNumbers: '', showAnimalForm: false})
