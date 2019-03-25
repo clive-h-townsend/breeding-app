@@ -15,7 +15,7 @@ class Home extends React.Component {
             <div>
                 <center>
                     <h1>
-                        Welcome to the Breeding Application! It is for Commercial cattle producers
+                        Welcome to the Breeding Application! It is for Commercial cattle producers like you
                     </h1>
                     
                 </center>

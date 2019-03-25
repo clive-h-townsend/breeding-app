@@ -3,13 +3,15 @@ import './App.css';
 
 import {BrowserRouter as Router, Route} from 'react-router-dom'
 
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
-import {auth, config, db} from './Data/Fire'
+
+import {auth, db} from './Data/Fire'
 
 import Home from './Components/Home'
 import Account from './Components/Account'
-import Template from './Components/Template'
+import Login from './Components/Login'
+import Manager from './Components/Manager'
+
 
 import * as SHeader from './Components/StyledComponents/Header'
 
@@ -66,9 +68,8 @@ class App extends Component {
 
     const HomeURL = '/'
     const AccountURL = '/account'
-    const TemplateURL = '/template'
-    
-
+    const LoginURL = '/login'
+    const ManagerURL = '/herd-manager'
     
     if (!!this.state.userData && this.state.isAdmin) {
 
@@ -80,8 +81,7 @@ class App extends Component {
               
                 
                   <SHeader.HeaderLink to={HomeURL}>Home</SHeader.HeaderLink >
-                
-                  <SHeader.HeaderLink to={TemplateURL}>Template</SHeader.HeaderLink>
+                  <SHeader.HeaderLink to={ManagerURL} >Manager</SHeader.HeaderLink>
                
                   <SHeader.LogoutButton onClick={()=>auth.signOut()}>Sign Out</SHeader.LogoutButton>
 
@@ -91,8 +91,8 @@ class App extends Component {
 
             <Route path={HomeURL} exact component={Home} />
             <Route path={AccountURL} exact component={Account} />
+            <Route path={ManagerURL} exact component={Manager} />
             {/* <Route path="/posts/:id"  component={ShowPost} /> */}
-            <Route path={TemplateURL} component={Template} />
 
           </div>
         </Router>
@@ -104,7 +104,7 @@ class App extends Component {
             <SHeader.NavBar>
               
                   <SHeader.HeaderLink to={HomeURL}>Home</SHeader.HeaderLink >
-                  <SHeader.HeaderLink to={TemplateURL}>Template</SHeader.HeaderLink>
+                  <SHeader.HeaderLink to={ManagerURL}>Manager</SHeader.HeaderLink>
                   <SHeader.HeaderLink  to={AccountURL}>Account</SHeader.HeaderLink >
 
                   <SHeader.LogoutButton onClick={()=>auth.signOut()}>Sign Out</SHeader.LogoutButton>
@@ -115,8 +115,8 @@ class App extends Component {
 
             <Route path={HomeURL} exact component={Home} />
             <Route path={AccountURL} exact component={Account} />
+            <Route path={ManagerURL} exact component={Manager} />
             {/* <Route path="/posts/:id" component={ShowPost} /> */}
-            <Route path={TemplateURL} component={Template} />
 
           </div>
         </Router>
@@ -131,12 +131,14 @@ class App extends Component {
               
                   <center>
                     <SHeader.HeaderLink to={HomeURL}>Home</SHeader.HeaderLink >
-                    <StyledFirebaseAuth uiConfig={config} firebaseAuth={auth}/>
+                    <SHeader.HeaderLink to={LoginURL}>Login</SHeader.HeaderLink>
+                    
                   </center>
                 
             </SHeader.NavBar>
 
             <Route path={HomeURL} exact component={Home} />
+            <Route path={LoginURL} exact component={Login} />
 
           </div>
         </Router>

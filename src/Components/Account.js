@@ -8,14 +8,21 @@ import * as SImg from '../Components/StyledComponents/Images'
 class Account extends React.Component {
 
     state = {
-        userData: auth.currentUser
+        userData: auth.currentUser, 
+      
     }
 
     componentDidMount() {
+
         GoogleAnalytics('/account')
+
     }
 
+    
+
     render() {
+
+
         return (
             <div>
                 <center>
@@ -24,6 +31,8 @@ class Account extends React.Component {
                     </h1>
                     <SImg.LargeAvatar src={this.state.userData.photoURL} alt="profile-avatar" ></SImg.LargeAvatar>
                     <p>Registered Email: {this.state.userData.email}</p>
+
+
                 </center>
                 
             </div>
