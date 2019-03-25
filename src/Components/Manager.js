@@ -13,9 +13,10 @@ class Manager extends React.Component {
         showHerdForm: false,
         showAnimalForm: false,
         herdName: '', 
-        animalRegNumber: '',
+        animalRegNumbers: '',
         herds: [], 
-        animals: []
+        animals: [],
+        selectedHerd: null,
     }
 
     componentDidMount() {
@@ -25,7 +26,10 @@ class Manager extends React.Component {
         db.collection('herds').where('owner', '==', auth.currentUser.uid).onSnapshot(snapshot => {
             let herds = []
             snapshot.forEach(doc => {
-                herds.push(doc.data())
+                this.setState({selectedHerd: doc.id})
+                let herdUIDObject = {herdUID: doc.id}
+                let herdDataObject = doc.data()
+                herds.push({...herdUIDObject, ...herdDataObject})
             })
             this.setState({herds})
         })
@@ -57,20 +61,28 @@ class Manager extends React.Component {
 
     addAnimal = () => {
 
-        let animalObject = {
-            animalRegNumber: this.state.animalRegNumber,
-            owner: auth.currentUser.uid
-        }
+        let animalList = this.state.animalRegNumbers
+        animalList = animalList.split(',')
+        
+   
+        
+        animalList.forEach(animal=> {
+            let animalObject = {
+                animalRegNumbers: animal,
+                owner: auth.currentUser.uid,
+                herd: this.state.selectedHerd,
+            }
+            db.collection('animals').add(animalObject)
+        }) 
 
-        db.collection('animals').add(animalObject)
-
-        this.setState({animalRegNumber: '', showAnimalForm: false})
+        this.setState({animalRegNumbers: '', showAnimalForm: false})
 
     }
 
     handleChange = (event) => {
         
         this.setState({[event.target.name]: event.target.value})
+        console.log(this.state.selectedHerd)
     }
     
 
@@ -85,9 +97,26 @@ class Manager extends React.Component {
             </div>
         )
 
+        let herdDropDown = (
+            <div>
+                <select name="selectedHerd" onChange={this.handleChange} value={this.state.selectedHerd}>
+                    {this.state.herds.map((herd,index) => {
+                        if (index === 0) {
+                            
+                            return (<option value={herd.herdUID}>{herd.herdName}</option>)
+                        } else {
+                            return (<option value={herd.herdUID}>{herd.herdName}</option>)
+                        }
+                        
+                    })}
+                </select>
+            </div>
+        )
+
         let animalForm = (
             <div>
-                <SInput.Standard name="animalRegNumber" onChange={this.handleChange} value={this.state.animalRegNumber} />
+                Herd to add into: {herdDropDown}
+                <SInput.Standard name="animalRegNumbers" onChange={this.handleChange} value={this.state.animalRegNumbers} />
                 <SButton.Standard onClick={()=>this.addAnimal()}>Save</SButton.Standard>
             </div>
         )
@@ -107,7 +136,7 @@ class Manager extends React.Component {
             <div>
                 {this.state.animals.map(animal=> {
                     return (
-                        <div>{animal.animalRegNumber}</div>
+                        <div>{animal.animalRegNumbers}</div>
                     )
                 })}
             </div>
@@ -120,7 +149,9 @@ class Manager extends React.Component {
                     {animalList}
 
                     {this.state.showHerdForm ? herdForm :  <SButton.Standard onClick={()=>this.setState({showHerdForm: true})}>Add Herd</SButton.Standard>}
-                    {this.state.showAnimalForm ? animalForm :  <SButton.Standard onClick={()=>this.setState({showAnimalForm: true})}>Add Animal</SButton.Standard>}
+                    {this.state.showAnimalForm ? animalForm :  <SButton.Standard onClick={()=>this.setState({showAnimalForm: true})}>Add Animals</SButton.Standard>}
+                    <br />
+                
                    
 
 
