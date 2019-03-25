@@ -8,6 +8,4 @@ let db = firebase.firestore()
 
 let storage = firebase.storage();
 
-console.log(config.apiKey)
-
 export {auth, config, db, storage}
