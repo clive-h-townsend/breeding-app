@@ -2,7 +2,7 @@ import firebase from 'firebase'
 import siteAPIKey from './Sensative/apiKey'
 
 // These are straight from firebase. They are backed up
-// Don't post 2
+
 let config = {
     signInFlow: 'popup',
     signInOptions: [
