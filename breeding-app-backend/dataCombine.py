@@ -1,23 +1,27 @@
 import csv
 
-fileList = [
-    '2015-1.csv',
-    '2015-2.csv',
-    '2015-3.csv',
-    '2015-4.csv',
-    '2016-1.csv',
-    '2016-2.csv',
-    '2016-3.csv',
-    '2016-4.csv',
-    '2017-4.csv',
-    '2018-1.csv',
-    '2018-2.csv',
-    '2018-3.csv',
-    '2018-4.csv',
-    '2018-5.csv'
-]
+# fileList = [
+#     '2015-1.csv',
+#     '2015-2.csv',
+#     '2015-3.csv',
+#     '2015-4.csv',
+#     '2016-1.csv',
+#     '2016-2.csv',
+#     '2016-3.csv',
+#     '2016-4.csv',
+#     '2017-4.csv',
+#     '2018-1.csv',
+#     '2018-2.csv',
+#     '2018-3.csv',
+#     '2018-4.csv',
+#     '2018-5.csv'
+# ]
 
-filePath = './SourceData/allData.csv'
+fileList = ['animals.csv']
+
+sourceOrTest = './TestData/'
+
+filePath = sourceOrTest + 'allData.csv'
 cFile = open(filePath, 'w')
 
 
@@ -27,7 +31,7 @@ numOfFiles = len(fileList)
 i = 0
 
 while i < numOfFiles:
-    dataFile = open('./SourceData/' + fileList[i])
+    dataFile = open(sourceOrTest + fileList[i])
     headers = dataFile.readline().replace('"', '').replace('(', '').replace(')', '')
     if (i == 0):
         cFile.write(headers)
@@ -60,7 +64,7 @@ while lineRead != '':
 cleanArray = []
 numEntries = len(dataArray)
 i = 0
-cleanFile = open('CleanData.csv', 'w')
+cleanFile = open(sourceOrTest + 'CleanData.csv', 'w')
 cleanFile.write(',' + headers.replace('\n', '') + ',Bads,adf')
 counter = 1
 while i < numEntries:
