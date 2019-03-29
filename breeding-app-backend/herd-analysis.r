@@ -1,5 +1,5 @@
 library(ggplot2)
-setwd('/home/clive/Desktop/GHS/breeding-app/breeding-app-backend')
+setwd('/home/clive/Desktop/GHS/breeding-app/breeding-app-backend/TestData')
 print(getwd())
 
 df <- read.csv(file="CleanData.csv")
