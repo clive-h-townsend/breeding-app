@@ -12,7 +12,7 @@ db = firestore.client()
 
 collection_ref = db.collection(u'animals')
 
-dataFile = open('animals2.csv')
+dataFile = open('2018-5.csv')
 
 lineRead = dataFile.readline().replace('"', '').replace('(', '').replace(')', '').replace('\n', '')
 headers = lineRead.split(',')
@@ -23,6 +23,8 @@ while lineRead != '':
     values = lineRead.split(',')
 
     animalObject = {}
+    animalObject['sourceYear'] = "2018"
+    animalObject['ageCategory'] = "Heifer"
 
     for i in range(len(headers)):
         animalObject[headers[i]] = values[i]

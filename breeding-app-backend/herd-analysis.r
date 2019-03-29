@@ -1,18 +1,49 @@
 library(ggplot2)
-setwd('~/Desktop/Githubs/breeding-app-1/breeding-app-backend')
+setwd('/home/clive/Desktop/GHS/breeding-app/breeding-app-backend')
 print(getwd())
 
-df <- read.csv(file="animals2.csv")
+df <- read.csv(file="CleanData.csv")
 
 df$BirthYear <- with(df, format(as.Date(BirthDate, format="%Y-%m-%d"), "%Y"))
 
 print('Calving Ease EPD')
-print(mean(subset(df, BirthYear=="2005")$Epds.CeEpd, na.rm=TRUE))
-print(mean(subset(df, BirthYear=="2006")$Epds.CeEpd, na.rm=TRUE))
-print(mean(subset(df, BirthYear=="2007")$Epds.CeEpd, na.rm=TRUE))
-print(mean(subset(df, BirthYear=="2008")$Epds.CeEpd, na.rm=TRUE))
-print(mean(subset(df, BirthYear=="2009")$Epds.CeEpd, na.rm=TRUE))
-print(mean(subset(df, BirthYear=="2010")$Epds.CeEpd, na.rm=TRUE))
+
+years = c( "2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016")
+
+epds <- c("Epds.BirthWtEpd", "Epds.YearlingWtEpd", "Epds.CeEpd", "Epds.WeanWtEpd", "Epds.Api", "Epds.Ti")
+epdNames <- c("Birth Weight", "Yearling Weight" , "Calving Ease", "Wean Weight", "API", "TI")
+df$Epds.WeanWtEpd
+
+i <- 0
+for (epd in epds) {
+  epdTrend <- c()
+  for (year in years) {
+    epdYearAvg <- mean(subset(df, BirthYear==year)[[epd]], na.rm=TRUE)
+    epdTrend <- c(epdTrend, epdYearAvg)
+  }  
+  
+  dfepds <- data.frame(years, epdTrend)
+  
+  plot <- ggplot(dfepds, aes(years, epdTrend))
+  plot <- plot + geom_point(color='blue', size=5, shape=21, fill="white", stroke=5) #+ stat_smooth(method="lm", col="red")
+  #plot <- plot + geom_bar(stat="identity")
+  plot <- plot + theme_classic()
+  plot <- plot + ggtitle(paste("Year vs. ",epdNames[i]))
+  plot <- plot + xlab("Year")
+  plot <- plot + ylab(epdNames[i])
+  
+  png(paste("Year vs. ", epdNames[i], ".png"))
+  
+  print(plot)
+  dev.off()
+  
+  i <- i + 1
+}
+
+
+
+
+
 
 simpledf <- data.frame(
   "CE" = df$Epds.CeEpd, 
@@ -64,9 +95,10 @@ plot <- plot + geom_point(color='blue') #+ stat_smooth(method="lm", col="red")
 plot <- plot + theme_classic()
 plot <- plot + ggtitle("API Prediction vs. Actual")
 plot <- plot + xlab("API Prediction")
-plot <- plot + ggtitle("API Actual")
+plot <- plot + xlim(c(75, 175))
+plot <- plot + ylim(c(75, 175))
 
-print(plot)
+#print(plot)
 
 print(cor(simpledf$API, simpledf$APIPredictor, use="complete.obs", method="pearson"))
 
