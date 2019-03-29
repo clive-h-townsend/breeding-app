@@ -1,8 +1,10 @@
 library(ggplot2)
-setwd('/home/clive/Desktop/GHS/breeding-app/breeding-app-backend/TestData')
+#setwd('/home/clive/Desktop/GHS/breeding-app/breeding-app-backend/TestData')
+setwd('~/Desktop/Githubs/breeding-app-2/breeding-app-backend/SourceData/')
 print(getwd())
 
-df <- read.csv(file="CleanData.csv")
+#df <- read.csv(file="CleanData.csv")
+df <- read.csv(file="AllData.csv")
 
 df$BirthYear <- with(df, format(as.Date(BirthDate, format="%Y-%m-%d"), "%Y"))
 
@@ -10,18 +12,19 @@ print('Calving Ease EPD')
 
 years = c( "2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016")
 
-epds <- c("Epds.BirthWtEpd", "Epds.YearlingWtEpd", "Epds.CeEpd", "Epds.WeanWtEpd", "Epds.Api", "Epds.Ti")
-epdNames <- c("Birth Weight", "Yearling Weight" , "Calving Ease", "Wean Weight", "API", "TI")
-df$Epds.WeanWtEpd
+epds <- c("Epds.BirthWtEpd", "Epds.YearlingWtEpd", "Epds.CeEpd", "Epds.WeanWtEpd", "Epds.Api", "Epds.Ti", "Epds.BackFatEpd")
+epdNames <- c("Birth Weight", "Yearling Weight" , "Calving Ease", "Wean Weight", "API", "TI", "Back Fat")
+df$Epds.BackFatEpd
 
-i <- 0
+i <- 1
 for (epd in epds) {
   epdTrend <- c()
   for (year in years) {
     epdYearAvg <- mean(subset(df, BirthYear==year)[[epd]], na.rm=TRUE)
     epdTrend <- c(epdTrend, epdYearAvg)
   }  
-  
+  print(epdNames[i])
+  print(epdTrend)
   dfepds <- data.frame(years, epdTrend)
   
   plot <- ggplot(dfepds, aes(years, epdTrend))
@@ -32,7 +35,7 @@ for (epd in epds) {
   plot <- plot + xlab("Year")
   plot <- plot + ylab(epdNames[i])
   
-  png(paste("Year vs. ", epdNames[i], ".png"))
+  png(paste("XYear vs. ", epdNames[i], ".png"))
   
   print(plot)
   dev.off()
@@ -70,23 +73,25 @@ simpledf <- data.frame(
 #print(cor(simpledf, use="complete.obs", method="pearson"))
 
 fitBW <- lm(API ~ BW, data=simpledf, na.action=na.omit)
-fitCE <- lm(API ~ CE, data=simpledf, na.action=na.omit)
+#fitCE <- lm(API ~ CE, data=simpledf, na.action=na.omit)
 fitMarb <- lm(API ~ Marb, data=simpledf, na.action=na.omit)
 fitStay <- lm(API ~ Stay, data=simpledf, na.action=na.omit)
 
 BWAPIPred <- simpledf$BW*fitBW$coefficients[2] + fitBW$coefficients[1]
-CEAPIPred <- simpledf$CE*fitCE$coefficients[2] + fitCE$coefficients[1]
+#CEAPIPred <- simpledf$CE*fitCE$coefficients[2] + fitCE$coefficients[1]
 MarbAPIPred <- simpledf$Marb*fitMarb$coefficients[2] + fitCE$coefficients[1]
 StayAPIPred <- simpledf$Stay*fitStay$coefficients[2] + fitStay$coefficients[1]
 
 BWWeight <- 1.0
-CEWeight <- 1.1
+#CEWeight <- 1.1
 MarbWeight <- 2.1
 StayWeight <- 1.7
 
-WeightSum <- BWWeight + CEWeight + MarbWeight + StayWeight
+#WeightSum <- BWWeight + CEWeight + MarbWeight + StayWeight
+WeightSum <- BWWeight + MarbWeight + StayWeight
 
-meanAPIPred <- ((BWAPIPred * BWWeight) + (CEAPIPred*CEWeight) + (MarbAPIPred*MarbWeight) + (StayAPIPred*StayWeight)) / WeightSum
+#meanAPIPred <- ((BWAPIPred * BWWeight) + (CEAPIPred*CEWeight) + (MarbAPIPred*MarbWeight) + (StayAPIPred*StayWeight)) / WeightSum
+meanAPIPred <- ((BWAPIPred * BWWeight) + (MarbAPIPred*MarbWeight) + (StayAPIPred*StayWeight)) / WeightSum
 
 simpledf$APIPredictor <- meanAPIPred
 
@@ -98,7 +103,7 @@ plot <- plot + xlab("API Prediction")
 plot <- plot + xlim(c(75, 175))
 plot <- plot + ylim(c(75, 175))
 
-#print(plot)
+print(plot)
 
 print(cor(simpledf$API, simpledf$APIPredictor, use="complete.obs", method="pearson"))
 
