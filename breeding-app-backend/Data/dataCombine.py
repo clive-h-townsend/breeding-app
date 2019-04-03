@@ -1,25 +1,25 @@
 import csv
 
-# fileList = [
-#     '2015-1.csv',
-#     '2015-2.csv',
-#     '2015-3.csv',
-#     '2015-4.csv',
-#     '2016-1.csv',
-#     '2016-2.csv',
-#     '2016-3.csv',
-#     '2016-4.csv',
-#     '2017-4.csv',
-#     '2018-1.csv',
-#     '2018-2.csv',
-#     '2018-3.csv',
-#     '2018-4.csv',
-#     '2018-5.csv'
-# ]
+fileList = [
+    '2015-1.csv',
+    '2015-2.csv',
+    '2015-3.csv',
+    '2015-4.csv',
+    '2016-1.csv',
+    '2016-2.csv',
+    '2016-3.csv',
+    '2016-4.csv',
+    '2017-4.csv',
+    '2018-1.csv',
+    '2018-2.csv',
+    '2018-3.csv',
+    '2018-4.csv',
+    '2018-5.csv'
+]
 
-fileList = ['animals.csv']
+# fileList = ['animals.csv']
 
-sourceOrTest = './TestData/'
+sourceOrTest = './SourceData/'
 
 filePath = sourceOrTest + 'allData.csv'
 cFile = open(filePath, 'w')
