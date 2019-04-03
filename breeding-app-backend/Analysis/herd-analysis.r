@@ -70,7 +70,7 @@ simpledf <- data.frame(
 
 simpledf <- simpledf[which(simpledf$YEAR=='2016'),]
 
-epdSimpleName <- c('API')
+epdSimpleName <- c('TI')
 
 plot <- ggplot(simpledf, aes(API)) + geom_histogram()
 print(plot)
@@ -83,8 +83,8 @@ for (epdName in epdSimpleName) {
   epdASAMean <- df.asatable[[epdName]][14]
   print(epdASAMean)
   # Select EPD Here Too
-  plot <- ggplot(simpledf, aes(x=API))
-  plot <- plot + geom_histogram(binwidth=5)
+  plot <- ggplot(simpledf, aes(x=TI))
+  plot <- plot + geom_histogram(binwidth=2)
   plot <- plot + geom_vline(xintercept = mean(epdMean))
   plot <- plot + geom_vline(xintercept = mean(epdASAMean), color='blue')
   plot <- plot + theme_classic()
