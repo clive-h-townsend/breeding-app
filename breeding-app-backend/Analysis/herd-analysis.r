@@ -70,21 +70,26 @@ simpledf <- data.frame(
 
 simpledf <- simpledf[which(simpledf$YEAR=='2016'),]
 
-epdSimpleName <- c('TI')
+epdSimpleName <- c('TI', 'API', 'CE', 'BW', 'MCE', 'WW', 'YW', 'Marb', 'YG', 'BF', 'REA', 'SHR', 'Stay', 'Milk', 'MWW', 'CW', 'Doc', 'ADG')
+epdBinWidth <- c(5,10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.01)
+
+
 
 plot <- ggplot(simpledf, aes(API)) + geom_histogram()
 print(plot)
-
+i <- 1
 for (epdName in epdSimpleName) {
+  
   print(epdName)
   epdMean <- mean(simpledf[[epdName]], na.rm=TRUE)
   print(epdMean)
   print('ASA Mean')
   epdASAMean <- df.asatable[[epdName]][14]
   print(epdASAMean)
-  # Select EPD Here Too
-  plot <- ggplot(simpledf, aes(x=TI))
-  plot <- plot + geom_histogram(binwidth=2)
+  
+  plot <- ggplot(simpledf, aes(x=!!rlang::sym(epdName)))
+  print(paste(epdName, ' ', epdBinWidth[i]))
+  plot <- plot + geom_histogram(binwidth=epdBinWidth[i])
   plot <- plot + geom_vline(xintercept = mean(epdMean))
   plot <- plot + geom_vline(xintercept = mean(epdASAMean), color='blue')
   plot <- plot + theme_classic()
@@ -92,7 +97,11 @@ for (epdName in epdSimpleName) {
   plot <- plot + xlab(epdName)
   plot <- plot + ylab('%')
   
+  png(paste(epdName, " vs. Frequency.png"))
+  
   print(plot)
+  dev.off()
+  i <- i + 1
 }
 
 
