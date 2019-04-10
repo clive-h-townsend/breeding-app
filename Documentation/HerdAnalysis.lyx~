@@ -82,6 +82,17 @@ Herd Analysis
 \begin_layout Standard
 This image shows API.
  The blue line is the industry average.
+ Here we go
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand input
+filename "CustomValues/test.txt"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -141,9 +152,15 @@ Birth Weight
 
 \end_layout
 
-\begin_layout Plain Layout
+\end_inset
+
 
 \end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand verbatiminput
+filename "CustomValues/test.txt"
 
 \end_inset
 
@@ -154,7 +171,7 @@ Birth Weight
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -624,13 +641,6 @@ Average Daily Gain
 \end_layout
 
 \begin_layout Standard
-\begin_inset CommandInset include
-LatexCommand include
-filename "test.txt"
-
-\end_inset
-
-
 \begin_inset Float figure
 wide false
 sideways false
@@ -692,16 +702,6 @@ Terminal Index
 
 
 \end_layout
-
-\end_inset
-
-jkhkjh
-\end_layout
-
-\begin_layout Standard
-\begin_inset CommandInset include
-LatexCommand include
-filename "test.txt"
 
 \end_inset
 

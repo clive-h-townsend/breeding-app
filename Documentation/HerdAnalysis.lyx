@@ -86,16 +86,6 @@ This image shows API.
 \end_layout
 
 \begin_layout Standard
-\begin_inset CommandInset include
-LatexCommand input
-filename "CustomValues/test.txt"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
@@ -158,20 +148,10 @@ Birth Weight
 \end_layout
 
 \begin_layout Standard
-\begin_inset CommandInset include
-LatexCommand verbatiminput
-filename "CustomValues/test.txt"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
