@@ -3,7 +3,7 @@ library(extrafont)
 
 # Select the working directory. This is where images will be placed. 
 # - - - Linux Option
-setwd('/home/clive/Desktop/GHS/breeding-app-1/breeding-app-backend/Data/OutputDump/')
+setwd('/home/clive/Desktop/GHS/breeding-app/breeding-app-backend/Data/OutputDump/')
 # - - - Mac Option
 #setwd('~/Desktop/Githubs/breeding-app/breeding-app-backend/SourceData/')
 
@@ -26,7 +26,7 @@ epds <- c("Epds.BirthWtEpd", "Epds.YearlingWtEpd", "Epds.CeEpd", "Epds.WeanWtEpd
 # The EPDs Full Common Name
 epdNames <- c("Birth Weight", "Yearling Weight" , "Calving Ease", "Wean Weight", "API", "TI", "Back Fat")
 
-# Fore every epd, plot its trend over time for given birth years
+# For every epd, plot its trend over time for given birth years
 i <- 1
 for (epd in epds) {
   
@@ -127,47 +127,84 @@ for (epdName in epdSimpleName) {
     # Show some high level information regarding the EPD
     # Get the mean for the herd
     epdMean <- mean(simpledf[[epdName]], na.rm=TRUE)
-    epdAcc <- mean(simpleaccdf[[epdName]], na.rm=TRUE)
-    epdAcc <- epdMean * epdAcc
+    epdVariance <- var(simpledf[[epdName]], na.rm = TRUE)
+    epdSD <- sd(simpledf[[epdName]], na.rm = TRUE)
+    
     # Show the industry mean
     epdASAMean <- df.asatable[[epdName]][14]
+    epdASATop60P <- df.asatable[[epdName]][16]
     epdASATop20P <- df.asatable[[epdName]][8]
     epdASATop5P <- df.asatable[[epdName]][5]
-    print(paste(epdName,'  Herd Mean:', epdMean,'+/-', epdAcc, '   ASA Mean:', epdASAMean, sep=" "))
     
     # Subtitle Holder
     mysubTitle <- ''
+    optimumDirection <- ''
     
     
     # Better to be high
     if (epdASATop5P > epdASATop20P) {
-      if (epdMean - epdAcc > epdASAMean) {
+      optimumDirection <- '>'
+      if (epdMean - epdSD > epdASAMean) {
         mysubTitle <- 'Outperformer'
-        print(paste('Performing well in ', epdName))
+        #print(paste('Performing well in ', epdName))
       }
-      if (epdMean + epdAcc < epdASAMean) {
+      if (epdMean + epdSD < epdASAMean) {
         mysubTitle <- 'Underperformer'
-        print(paste('Not performing well in ', epdName))
+        #print(paste('Not performing well in ', epdName))
       }
-    }
-    # Better to be low
-    if (epdASATop5P < epdASATop20P) {
-      if (epdMean + epdAcc < epdASAMean) {
-        mysubTitle <- 'Outperformer'
-        print(paste('Performing well in ', epdName))
+      
+      # Recommended Bull Selection Criterion
+      recEPDCriterion <- 0
+      # If EPD is in top 60th %, do nothing
+      if (epdMean > epdASATop60P) {
+        
+        recEPDCriterion <- epdASATop60P
+        
+        
       }
-      if (epdMean - epdAcc > epdASAMean) {
-        mysubTitle <- 'Underperformer'
-        print(paste('Not performing well in ', epdName))
+      # Otherwise apply twice the difference in top 60 and the mean
+      if (epdMean <= epdASATop60P) {
+        recEPDCriterion <- (2 * (epdASATop60P - epdMean)) + epdASATop60P
       }
       
     }
+    # Better to be low
+    if (epdASATop5P < epdASATop20P) {
+      optimumDirection <- '<'
+      if (epdMean + epdSD < epdASAMean) {
+        mysubTitle <- 'Outperformer'
+        #print(paste('Performing well in ', epdName))
+      }
+      if (epdMean - epdSD > epdASAMean) {
+        mysubTitle <- 'Underperformer'
+        #print(paste('Not performing well in ', epdName))
+      }
+      
+      # Recommended Bull Selection Criterion
+      recEPDCriterion <- 0
+      # If EPD is in top 60th %, do nothing
+      if (epdMean <= epdASATop60P) {
+        
+        recEPDCriterion <- epdASATop60P
+        
+      }
+      # Otherwise apply twice the difference in top 60 and the mean
+      if (epdMean > epdASATop60P) {
+        recEPDCriterion <- (2 * (epdMean - epdASATop60P)) - epdASATop60P
+      }
+      
+      
+    }
+    #print(paste(epdName,'  Herd Mean:', epdMean,'+/-', epdSD, '   ASA Mean:', epdASAMean, sep=" "))
+    print(paste(epdName,'  Herd Mean:', epdMean, '   ASA Mean:', epdASAMean, 'Threshold:', optimumDirection, format(round(recEPDCriterion, 2), nsmall = 2), sep=" "))
+    mysubTitle <- paste(mysubTitle, '- Recommended ', epdName, optimumDirection, format(round(recEPDCriterion, 2), nsmall = 2))
+    
     # Create a plot of the data for the relevant EPD
     plot <- ggplot(simpledf, aes(x=!!rlang::sym(epdName)))
     plot <- plot + geom_histogram(binwidth=epdBinWidth[i], fill='black')
     plot <- plot + geom_vline(aes(xintercept=epdMean, color="Herd Mean"), linetype="solid", size=2)
-    plot <- plot + geom_vline(aes(xintercept=(epdMean+epdAcc), color='Confidence Bounds'), linetype="dashed", size=0.5)
-    plot <- plot + geom_vline(aes(xintercept=(epdMean-epdAcc), color='Confidence Bounds'), linetype="dashed", size=0.5)
+    plot <- plot + geom_vline(aes(xintercept=(epdMean+epdSD), color='Confidence Bounds'), linetype="dashed", size=0.5)
+    plot <- plot + geom_vline(aes(xintercept=(epdMean-epdSD), color='Confidence Bounds'), linetype="dashed", size=0.5)
     plot <- plot + geom_vline(aes(xintercept=epdASAMean, color="ASA Mean"), linetype="solid", size=2) 
     plot <- plot + geom_vline(aes(xintercept=epdASATop20P, color="ASA Top 20%"), linetype="solid", size=2) 
     plot <- plot + scale_color_manual(name = "Herd vs ASA Data", values = c("ASA Top 20%"='green' ,'Herd Mean' = "blue", 'ASA Mean' = "red", 'Confidence Bounds'='lightblue', 'Confidence Bounds'='lightblue'))
